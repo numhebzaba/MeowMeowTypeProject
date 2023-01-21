@@ -36,6 +36,16 @@ public class Typer : MonoBehaviour
     public Animator BGanimator;
 
 
+    LoopBg loopBg_1, loopBg_2, loopBg_3, loopBg_4;
+    public GameObject loopBgArray_1, loopBgArray_2, loopBgArray_3, loopBgArray_4;
+
+    private void Awake()
+    {
+        loopBg_1 = loopBgArray_1.GetComponent<LoopBg>();
+        loopBg_2 = loopBgArray_2.GetComponent<LoopBg>();
+        loopBg_3 = loopBgArray_3.GetComponent<LoopBg>();
+        loopBg_4 = loopBgArray_4.GetComponent<LoopBg>();
+    }
     void Start()
     {
         // BGanimator = GetComponent<Animator>();
@@ -121,6 +131,11 @@ public class Typer : MonoBehaviour
     {
         if (IsCorrectLetter(typedLetter))
         {
+            loopBg_1.IsMove = true;
+            loopBg_2.IsMove = true;
+            loopBg_3.IsMove = true;
+            loopBg_4.IsMove = true;
+
             CheckLetter(typedLetter);
             RemoveLetter();
             BGanimator.speed = 1; //play background animation//
@@ -138,10 +153,11 @@ public class Typer : MonoBehaviour
 
     }
 
-    private void IsFalse(string keyinput)
+    public void IsFalse(string keyinput)
     {
         BGanimator.speed = 0; //Pause background animation//
         animationStateController.animator.SetBool(animationStateController.isSittingHash, true);
+
 
         foreach (var letter in DataLetterList)
         {
@@ -151,6 +167,10 @@ public class Typer : MonoBehaviour
                 letter.UpdateWrongLetterData();
             }
         }
+        loopBg_1.IsMove = false;
+        loopBg_2.IsMove = false;
+        loopBg_3.IsMove = false;
+        loopBg_4.IsMove = false;
     }
 
     private bool IsCorrectLetter(string letter)
