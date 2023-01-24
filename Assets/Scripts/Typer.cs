@@ -13,6 +13,7 @@ public class Typer : MonoBehaviour
     public TMP_Text nextWordOutput = null;
     public TMP_Text wordTotalUI = null;
     public TMP_Text TimeSpent = null;
+    public TMP_Text WordPerminuteText = null;
 
     public TMP_Text A_count = null;
     public TMP_Text A_error = null;
@@ -25,7 +26,11 @@ public class Typer : MonoBehaviour
 
     public float accuracy = 0;
     public int wordTotal = 0;
+    public int allTypedEntries = 0;
+    public int unCorrectedError = 0;
+    public int wordPerMinute = 0;
     public TimeSpan delayTimeSpan = new TimeSpan(0, 0, 0);
+    public int TimeInMinute;
 
     private string remainWord = string.Empty;
     private string currentWord = string.Empty;
@@ -93,6 +98,14 @@ public class Typer : MonoBehaviour
 
         TimeSpent.text = delayTimeSpan.ToString();
         wordTotalUI.text = "word :" + wordTotal.ToString();
+        
+        int TimeInIntValue = int.Parse(delayTimeSpan.Minutes.ToString());
+        if (TimeInIntValue <= 0)
+            TimeInIntValue = 1;
+        wordPerMinute = (((allTypedEntries / 5) - unCorrectedError))/TimeInIntValue;
+        WordPerminuteText.text = "WPM :"+wordPerMinute.ToString();
+
+
     }
 
     public void ShowDataLetter()
@@ -113,6 +126,7 @@ public class Typer : MonoBehaviour
 
             if (keyPressed.Length == 1)
                 EnterLetter(keyPressed);
+            allTypedEntries++;
         }
     }
 
@@ -161,7 +175,7 @@ public class Typer : MonoBehaviour
 
         foreach (var letter in DataLetterList)
         {
-            string temp = remainWord.ToLower();
+            //string temp = remainWord.ToLower();
             if (remainWord.Substring(0,1) == letter.getName)
             {
                 letter.UpdateWrongLetterData();
@@ -171,6 +185,8 @@ public class Typer : MonoBehaviour
         loopBg_2.IsMove = false;
         loopBg_3.IsMove = false;
         loopBg_4.IsMove = false;
+
+        unCorrectedError++;
     }
 
     private bool IsCorrectLetter(string letter)
