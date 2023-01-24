@@ -102,7 +102,10 @@ public class Typer : MonoBehaviour
         int TimeInIntValue = int.Parse(delayTimeSpan.Minutes.ToString());
         if (TimeInIntValue <= 0)
             TimeInIntValue = 1;
-        wordPerMinute = (((allTypedEntries / 5) - unCorrectedError))/TimeInIntValue;
+        if ((allTypedEntries / 5) <= unCorrectedError)
+            wordPerMinute = 0;
+        else
+            wordPerMinute = (((allTypedEntries / 5) - unCorrectedError))/TimeInIntValue;
         WordPerminuteText.text = "WPM :"+wordPerMinute.ToString();
 
 
