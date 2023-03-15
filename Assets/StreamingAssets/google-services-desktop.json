@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "328375477310",
+    "project_id": "meowmeowtype-firebase",
+    "storage_bucket": "meowmeowtype-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328375477310:android:12e07c1935f66b020f9d6f",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.MeowMeowType"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328375477310-tvjlb68pjuos0gp8e9o3eqra42m3iis0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWQ3Vn5qTekQRHlFblADOsAHmOid3ALts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "328375477310-tvjlb68pjuos0gp8e9o3eqra42m3iis0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
