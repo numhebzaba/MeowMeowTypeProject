@@ -25,7 +25,9 @@ public class ListLetters
 
     public string GetAllData
     {
-        get { return this.name + " Correct: " + this.Correct + " Incorrect: " + this.Incorrect + " Accuracy: " + (this.Correct/ this.Count)*100 + "%"; }
+        get { return this.name + " Correct: " + this.Correct + " Incorrect: " + this.Incorrect + " Accuracy: " + this.accuracy + "%"; }
+        //get { return this.name + " Correct: " + this.Correct + " Incorrect: " + this.Incorrect + " Accuracy: " + (this.Correct/ this.Count)*100 + "%"; }
+
     }
 
     public string getName
@@ -60,6 +62,11 @@ public class ListLetters
         this.Correct += 1;
         this.Count += 1;
     }
-    
+    public void UpdateAccuracy()
+    {
+        if(this.Count==0)
+            this.accuracy = 0;
+        this.accuracy = (this.Correct / this.Count) * 100;
+    }
 
 }

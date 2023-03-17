@@ -140,6 +140,7 @@ public class Typer : MonoBehaviour
             if(keyinput.ToLower() == letter.getName)
             {
                 letter.UpdateData();
+                letter.UpdateAccuracy();
             }
         }
     }
