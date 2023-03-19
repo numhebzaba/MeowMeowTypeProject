@@ -45,6 +45,7 @@ public class TutorialTyper : MonoBehaviour
 
     public Animator animator;
     public GameObject Keyboard;
+    public bool IsKeyboardActive;
 
 
     private void Awake()
@@ -61,7 +62,7 @@ public class TutorialTyper : MonoBehaviour
         SummaryUI.SetActive(false);
         SetCurrentWord();
         AddEngLetterlist();
-
+        IsKeyboardActive = true;
     }
 
 
@@ -261,7 +262,8 @@ public class TutorialTyper : MonoBehaviour
 
     public void SetActiveKeyboard()
     {
-        Keyboard.SetActive(false);
+        IsKeyboardActive = !IsKeyboardActive;
+        Keyboard.SetActive(IsKeyboardActive);
     }
 
     private void AddEngLetterlist()
