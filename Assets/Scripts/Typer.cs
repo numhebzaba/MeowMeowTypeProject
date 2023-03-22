@@ -44,6 +44,9 @@ public class Typer : MonoBehaviour
     LoopBg loopBg_1, loopBg_2, loopBg_3, loopBg_4;
     public GameObject loopBgArray_1, loopBgArray_2, loopBgArray_3, loopBgArray_4;
 
+    public TimeSpan SpeedType = new TimeSpan(0, 0, 0);
+
+
     private void Awake()
     {
         loopBg_1 = loopBgArray_1.GetComponent<LoopBg>();
@@ -58,6 +61,7 @@ public class Typer : MonoBehaviour
         SummaryUI.SetActive(false);
         SetCurrentWord();
         AddEngLetterlist();
+        
     }
 
 
@@ -79,7 +83,8 @@ public class Typer : MonoBehaviour
         nextWordOutput.text = nextWord;
     }
     void Update()
-    {   
+    {
+        SpeedType += TimeSpan.FromSeconds(Time.deltaTime);
         CheckInput();
 
         if (!wordList.IsWordLeft() && IsWordComplete())
@@ -94,9 +99,9 @@ public class Typer : MonoBehaviour
         }
 
         else
-            delayTimeSpan += TimeSpan.FromSeconds(Time.deltaTime);
+            delayTimeSpan += TimeSpan.FromSeconds(Time.deltaTime); 
 
-        TimeSpent.text = delayTimeSpan.ToString();
+        TimeSpent.text = delayTimeSpan.ToString(@"hh\:mm\:ss");
         wordTotalUI.text = "word :" + wordTotal.ToString();
         
         int TimeInIntValue = int.Parse(delayTimeSpan.Minutes.ToString());
@@ -137,10 +142,16 @@ public class Typer : MonoBehaviour
     {
         foreach (var letter in DataLetterList)
         {
+
             if(keyinput.ToLower() == letter.getName)
             {
                 letter.UpdateData();
                 letter.UpdateAccuracy();
+
+                float SpeedTypedOneLetter = (float)SpeedType.TotalSeconds;
+                letter.UpdateSpeed(SpeedTypedOneLetter);
+                Debug.Log(SpeedTypedOneLetter);
+                SpeedType = TimeSpan.Zero;
             }
         }
     }
@@ -159,6 +170,8 @@ public class Typer : MonoBehaviour
             BGanimator.speed = 1; //play background animation//
             animationStateController.animator.SetBool(animationStateController.isSittingHash, false);
             animationStateController.animator.SetBool(animationStateController.isWalkingHash, true);
+
+            
 
             if (IsWordComplete())
             {

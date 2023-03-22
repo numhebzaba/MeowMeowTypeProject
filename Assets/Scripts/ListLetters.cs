@@ -12,6 +12,7 @@ public class ListLetters
     private int Incorrect;
     private float accuracy;
     private float Count;
+    private float Speed;
 
     public ListLetters(string name, float TimeAverage, float NewTime, float Count)
     {
@@ -25,7 +26,7 @@ public class ListLetters
 
     public string GetAllData
     {
-        get { return this.name + " Correct: " + this.Correct + " Incorrect: " + this.Incorrect + " Accuracy: " + this.accuracy + "%"; }
+        get { return this.name + " Correct: " + this.Correct + " Incorrect: " + this.Incorrect + " Accuracy: " + this.accuracy + "%" + " \n Speed: " + this.Speed + " secs"; }
         //get { return this.name + " Correct: " + this.Correct + " Incorrect: " + this.Incorrect + " Accuracy: " + (this.Correct/ this.Count)*100 + "%"; }
 
     }
@@ -67,6 +68,13 @@ public class ListLetters
         if(this.Count==0)
             this.accuracy = 0;
         this.accuracy = (this.Correct / this.Count) * 100;
+    }
+    public void UpdateSpeed(float speedInput)
+    {
+        this.Speed += speedInput;
+        this.Speed = Speed / Correct;
+        float _2Diggit = (float)(Math.Truncate((double)Speed * 100.0) / 100.0);
+        this.Speed = _2Diggit;
     }
 
 }
