@@ -5,6 +5,7 @@ using Firebase.Auth;
 using Firebase.Database;
 using TMPro;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class FirebaseManager : MonoBehaviour
 {
@@ -160,11 +161,16 @@ public class FirebaseManager : MonoBehaviour
 
             yield return new WaitForSeconds(2);
 
-            usernameField.text = User.DisplayName;
-            UIManager.instance.UserDataScreen(); // Change to user data UI
-            confirmLoginText.text = "";
-            ClearLoginFeilds();
-            ClearRegisterFeilds();
+            PlayerPrefs.SetString("UserName", User.DisplayName);
+            PlayerPrefs.SetString("UserEmail", User.Email);
+            PlayerPrefs.SetString("UserPassword", _password);
+
+            SceneManager.LoadScene(1);
+            //usernameField.text = User.DisplayName;
+            //UIManager.instance.UserDataScreen(); // Change to user data UI
+            //confirmLoginText.text = "";
+            //ClearLoginFeilds();
+            //ClearRegisterFeilds();
         }
     }
 
