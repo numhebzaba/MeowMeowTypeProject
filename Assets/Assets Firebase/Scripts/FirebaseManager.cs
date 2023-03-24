@@ -105,7 +105,7 @@ public class FirebaseManager : MonoBehaviour
         StartCoroutine(UpdateUsernameDatabase(usernameField.text));
 
         StartCoroutine(UpdateNo(int.Parse(NoField.text)));
-        StartCoroutine(UpdateWpmls(int.Parse(WpmField.text)));
+        StartCoroutine(UpdateWpm(int.Parse(WpmField.text)));
         StartCoroutine(UpdateTime(int.Parse(TimeField.text)));
     }
     //Function for the scoreboard button
@@ -166,6 +166,7 @@ public class FirebaseManager : MonoBehaviour
             PlayerPrefs.SetString("UserPassword", _password);
 
             SceneManager.LoadScene(1);
+
             //usernameField.text = User.DisplayName;
             //UIManager.instance.UserDataScreen(); // Change to user data UI
             //confirmLoginText.text = "";
@@ -308,7 +309,7 @@ public class FirebaseManager : MonoBehaviour
         }
     }
 
-    private IEnumerator UpdateWpmls(int _Wpm)
+    private IEnumerator UpdateWpm(int _Wpm)
     {
         //Set the currently logged in user Wpm
         var DBTask = DBreference.Child("users").Child(User.UserId).Child("Wpm").SetValueAsync(_Wpm);

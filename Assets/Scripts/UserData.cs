@@ -17,8 +17,12 @@ public class UserData : MonoBehaviour
 
         UserName = PlayerPrefs.GetString("UserName");
         UserEmail = PlayerPrefs.GetString("UserEmail");
-        UserEmail = PlayerPrefs.GetString("UserPassword");
+        UserPassword = PlayerPrefs.GetString("UserPassword");
 
+
+        //PlayerPrefs.SetString("UserName", UserName);
+        //PlayerPrefs.SetString("UserEmail", UserEmail);
+        //PlayerPrefs.SetString("UserPassword", UserPassword);
 
     }
 
