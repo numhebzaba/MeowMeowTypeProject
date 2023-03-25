@@ -46,6 +46,7 @@ public class Typer : MonoBehaviour
 
     public TimeSpan SpeedType = new TimeSpan(0, 0, 0);
 
+    public DateTime aDate = DateTime.Now;
 
     private void Awake()
     {

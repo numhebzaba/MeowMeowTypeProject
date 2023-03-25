@@ -96,7 +96,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   usernameText: {fileID: 1879445941766762466}
   WpmText: {fileID: 0}
-  deathsText: {fileID: 1879445942200089366}
+  TimeText: {fileID: 0}
   xpText: {fileID: 1879445941144027540}
 --- !u!114 &1879445940651037390
 MonoBehaviour:

@@ -34,7 +34,7 @@ public class FirebaseManager : MonoBehaviour
     //User Data variables
     [Header("UserData")]
     public TMP_InputField usernameField;
-    public TMP_InputField NoField;
+    public TMP_InputField DateField;
     public TMP_InputField WpmField;
     public TMP_InputField TimeField;
     public GameObject scoreElement;
@@ -104,7 +104,7 @@ public class FirebaseManager : MonoBehaviour
         StartCoroutine(UpdateUsernameAuth(usernameField.text));
         StartCoroutine(UpdateUsernameDatabase(usernameField.text));
 
-        StartCoroutine(UpdateNo(int.Parse(NoField.text)));
+        StartCoroutine(UpdateDate(int.Parse(DateField.text)));
         StartCoroutine(UpdateWpm(int.Parse(WpmField.text)));
         StartCoroutine(UpdateTime(int.Parse(TimeField.text)));
     }
@@ -157,7 +157,7 @@ public class FirebaseManager : MonoBehaviour
             Debug.LogFormat("User signed in successfully: {0} ({1})", User.DisplayName, User.Email);
             warningLoginText.text = "";
             confirmLoginText.text = "Logged In";
-            StartCoroutine(LoadUserData());
+            //StartCoroutine(LoadUserData());
 
             yield return new WaitForSeconds(2);
 
@@ -292,10 +292,10 @@ public class FirebaseManager : MonoBehaviour
         }
     }
 
-    private IEnumerator UpdateNo(int _No)
+    private IEnumerator UpdateDate(int _Date)
     {
-        //Set the currently logged in user No
-        var DBTask = DBreference.Child("users").Child(User.UserId).Child("No").SetValueAsync(_No);
+        //Set the currently logged in user Date
+        var DBTask = DBreference.Child("users").Child(User.UserId).Child("No").SetValueAsync(_Date);
 
         yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 
@@ -305,7 +305,7 @@ public class FirebaseManager : MonoBehaviour
         }
         else
         {
-            //No is now updated
+            //Date is now updated
         }
     }
 
@@ -357,7 +357,7 @@ public class FirebaseManager : MonoBehaviour
         else if (DBTask.Result.Value == null)
         {
             //No data exists yet
-            NoField.text = "0";
+            DateField.text = "0";
             WpmField.text = "0";
             TimeField.text = "0";
         }
@@ -366,7 +366,7 @@ public class FirebaseManager : MonoBehaviour
             //Data has been retrieved
             DataSnapshot snapshot = DBTask.Result;
 
-            NoField.text = snapshot.Child("No").Value.ToString();
+            DateField.text = snapshot.Child("Date").Value.ToString();
             WpmField.text = snapshot.Child("Wpm").Value.ToString();
             TimeField.text = snapshot.Child("Time").Value.ToString();
         }
@@ -400,11 +400,11 @@ public class FirebaseManager : MonoBehaviour
                 string username = childSnapshot.Child("username").Value.ToString();
                 int Wpm = int.Parse(childSnapshot.Child("Wpm").Value.ToString());
                 int Time = int.Parse(childSnapshot.Child("Time").Value.ToString());
-                int No = int.Parse(childSnapshot.Child("No").Value.ToString());
+                int Date = int.Parse(childSnapshot.Child("Date").Value.ToString());
 
                 //Instantiate new scoreboard elements
                 GameObject scoreboardElement = Instantiate(scoreElement, scoreboardContent);
-                scoreboardElement.GetComponent<ScoreElement>().NewScoreElement(username, Wpm, Time, No);
+                scoreboardElement.GetComponent<ScoreElement>().NewScoreElement(username, Wpm, Time, Date);
             }
 
             //Go to scoareboard screen

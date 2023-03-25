@@ -71,7 +71,7 @@ public class UpLoadData : MonoBehaviour
         Debug.Log(userData.UserName);
         Debug.Log(typer.wordPerMinute);
         Debug.Log(typer.delayTimeSpan.ToString(@"hh\:mm\:ss"));
-        StartCoroutine(UpdateNo(typer.wordPerMinute, typer.delayTimeSpan.ToString(@"hh\:mm\:ss")));
+        StartCoroutine(UpdateDate(typer.wordPerMinute, typer.delayTimeSpan.ToString(@"hh\:mm\:ss")));
 
     }
     private IEnumerator UpdateUsernameAuth(string _username)
@@ -109,33 +109,35 @@ public class UpLoadData : MonoBehaviour
             //Database username is now updated
         }
     }
-    private IEnumerator UpdateNo(int _Wpm, string _Time)
+    private IEnumerator UpdateDate(int _Wpm, string _Time)
     {
-        int No = 0;
+        //int Date = 0;
 
-        var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").GetValueAsync();
+        //var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").GetValueAsync();
 
-        yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+        //yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 
-        if (DBTask.Exception != null)
-        {
-            Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
-        }
-        else if (DBTask.Result.Value == null)
-        {
-            No = 1;
-        }
-        else
-        {
-            DataSnapshot snapshot = DBTask.Result;
-            No  = (int)snapshot.Child("No").Value + 1;
-        }
+        //if (DBTask.Exception != null)
+        //{
+        //    Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+        //}
+        //else if (DBTask.Result.Value == null)
+        //{
+        //    Date = 1;
+        //}
+        //else
+        //{
+        //    DataSnapshot snapshot = DBTask.Result;
+        //    Date  = (int)snapshot.Child(typer.aDate.ToString("MM/dd/yyyy")).Value;
+        //}
 
+
+        string Date_StringValue = typer.aDate.ToString("dd:MM:yyyy hh:mm tt");
+        //Set the currently logged in user Date
+        Debug.Log(Date_StringValue);
         
-        string No_StringValue = No.ToString();
-        //Set the currently logged in user No
-
-        var DBTask2 = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(No_StringValue).SetValueAsync(No);
+        Debug.Log(typer.aDate.ToString("MM/dd/yyyy hh:mm tt"));
+        var DBTask2 = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(Date_StringValue).SetValueAsync(Date_StringValue);
 
 
         yield return new WaitUntil(predicate: () => DBTask2.IsCompleted);
@@ -146,18 +148,18 @@ public class UpLoadData : MonoBehaviour
         }
         else
         {
-            //No is now updated
+            //Date is now updated
         }
 
-        StartCoroutine(UpdateWpm(_Wpm, No_StringValue));
-        StartCoroutine(UpdateTime(_Time, No_StringValue));
+        StartCoroutine(UpdateWpm(_Wpm, Date_StringValue));
+        StartCoroutine(UpdateTime(_Time, Date_StringValue));
 
 
     }
-    private IEnumerator UpdateWpm(int _Wpm, string _No)
+    private IEnumerator UpdateWpm(int _Wpm, string _Date)
     {
         //Set the currently logged in user Wpm
-        var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(_No).Child("Wpm").SetValueAsync(_Wpm);
+        var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(_Date).Child("Wpm").SetValueAsync(_Wpm);
 
         yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 
@@ -170,10 +172,10 @@ public class UpLoadData : MonoBehaviour
             //Wpms are now updated
         }
     }
-    private IEnumerator UpdateTime(string _Time, string _No)
+    private IEnumerator UpdateTime(string _Time, string _Date)
     {
         //Set the currently logged in user Time
-        var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(_No).Child("Time").SetValueAsync(_Time);
+        var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(_Date).Child("Time").SetValueAsync(_Time);
 
         yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 

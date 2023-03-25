@@ -810,7 +810,7 @@ GameObject:
   - component: {fileID: 78483431}
   - component: {fileID: 78483430}
   m_Layer: 0
-  m_Name: No
+  m_Name: Date
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -927,7 +927,7 @@ MonoBehaviour:
   passwordRegisterVerifyField: {fileID: 2049681267}
   warningRegisterText: {fileID: 537031899}
   usernameField: {fileID: 1302477861}
-  NoField: {fileID: 935969858}
+  DateField: {fileID: 935969858}
   WpmField: {fileID: 2074477787}
   TimeField: {fileID: 56877854}
   scoreElement: {fileID: 1879445940651037232, guid: 829cd42e5df49e047a3a4afb1ba6859d, type: 3}
@@ -2114,7 +2114,7 @@ GameObject:
   - component: {fileID: 367991660}
   - component: {fileID: 367991659}
   m_Layer: 0
-  m_Name: No_Text
+  m_Name: Date_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2160,7 +2160,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No
+  m_text: Date
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4662,7 +4662,7 @@ GameObject:
   - component: {fileID: 935969859}
   - component: {fileID: 935969858}
   m_Layer: 0
-  m_Name: No_Input
+  m_Name: Date_Input
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8529,7 +8529,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 145, y: -1}
+  m_AnchoredPosition: {x: 194, y: -1}
   m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1579123169
@@ -8615,7 +8615,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 67.552, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -8934,7 +8934,7 @@ GameObject:
   - component: {fileID: 1686654830}
   - component: {fileID: 1686654829}
   m_Layer: 0
-  m_Name: No
+  m_Name: Date
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8980,7 +8980,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No
+  m_text: Date
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
