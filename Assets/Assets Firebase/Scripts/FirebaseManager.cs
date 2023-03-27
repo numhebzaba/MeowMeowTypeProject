@@ -376,6 +376,8 @@ public class FirebaseManager : MonoBehaviour
     {
         //Get all the users data ordered by Wpms amount
         var DBTask = DBreference.Child("users").OrderByChild("Wpm").GetValueAsync();
+        var DBTask2 = DBreference.Child("users").Child(User.UserId).GetValueAsync();
+
 
         yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 
@@ -399,9 +401,12 @@ public class FirebaseManager : MonoBehaviour
             {
                 string username = childSnapshot.Child("username").Value.ToString();
                 int Wpm = int.Parse(childSnapshot.Child("Wpm").Value.ToString());
-                int Time = int.Parse(childSnapshot.Child("Time").Value.ToString());
-                int Date = int.Parse(childSnapshot.Child("Date").Value.ToString());
-
+                string Time = childSnapshot.Child("Time").Value.ToString();
+                string Date = childSnapshot.Child("Date").Value.ToString();
+                Debug.Log(username);
+                Debug.Log(Wpm);
+                Debug.Log(Time);
+                Debug.Log(Date);
                 //Instantiate new scoreboard elements
                 GameObject scoreboardElement = Instantiate(scoreElement, scoreboardContent);
                 scoreboardElement.GetComponent<ScoreElement>().NewScoreElement(username, Wpm, Time, Date);

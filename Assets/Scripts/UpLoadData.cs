@@ -19,6 +19,13 @@ public class UpLoadData : MonoBehaviour
     public UserData userData;
     public Typer typer;
 
+    [Header("UserData")]
+    public Transform scoreboardContent;
+    public GameObject scoreElement;
+
+    public GameObject HistoryUI;
+    public bool IsHistoryUIActive = false;
+
 
     void Awake()
     {
@@ -47,12 +54,12 @@ public class UpLoadData : MonoBehaviour
     }
     private void Start()
     {
-        
+        StartCoroutine(Login(userData.UserEmail, userData.UserPassword));
+
     }
     public void UploadDataButton()
     {
-        StartCoroutine(Login(userData.UserEmail, userData.UserPassword));
-        
+        StartCoroutine(UpdateDate(typer.wordPerMinute, typer.delayTimeSpan.ToString(@"hh\:mm\:ss")));
 
     }
     private IEnumerator Login(string _email, string _password)
@@ -67,11 +74,9 @@ public class UpLoadData : MonoBehaviour
         yield return new WaitForSeconds(2);
 
         StartCoroutine(UpdateUsernameAuth(userData.UserName));
+
         //StartCoroutine(UpdateUsernameDatabase(userData.UserName));
-        Debug.Log(userData.UserName);
-        Debug.Log(typer.wordPerMinute);
-        Debug.Log(typer.delayTimeSpan.ToString(@"hh\:mm\:ss"));
-        StartCoroutine(UpdateDate(typer.wordPerMinute, typer.delayTimeSpan.ToString(@"hh\:mm\:ss")));
+
 
 
     }
@@ -94,22 +99,7 @@ public class UpLoadData : MonoBehaviour
             //Auth username is now updated
         }
     }
-    private IEnumerator UpdateUsernameDatabase(string _username)
-    {
-        //Set the currently logged in user username in the database
-        var DBTask = DBreference.Child("users").Child(User.UserId).Child("username").SetValueAsync(_username);
 
-        yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
-
-        if (DBTask.Exception != null)
-        {
-            Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
-        }
-        else
-        {
-            //Database username is now updated
-        }
-    }
     private IEnumerator UpdateDate(int _Wpm, string _Time)
     {
 
@@ -118,7 +108,7 @@ public class UpLoadData : MonoBehaviour
         Debug.Log(Date_StringValue);
         
         Debug.Log(typer.aDate.ToString("MM/dd/yyyy hh:mm tt"));
-        var DBTask2 = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(Date_StringValue).SetValueAsync(Date_StringValue);
+        var DBTask2 = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(Date_StringValue).Child("Date").SetValueAsync(Date_StringValue);
 
 
         yield return new WaitUntil(predicate: () => DBTask2.IsCompleted);
@@ -132,6 +122,8 @@ public class UpLoadData : MonoBehaviour
             //Date is now updated
         }
 
+        StartCoroutine(UpdateUsernameDatabase(userData.UserName, Date_StringValue));
+
         StartCoroutine(UpdateWpm(_Wpm, Date_StringValue));
         StartCoroutine(UpdateTime(_Time, Date_StringValue));
 
@@ -142,6 +134,22 @@ public class UpLoadData : MonoBehaviour
             StartCoroutine(UpdateLetterAccuracyTypedData(item.getName, item.GetAccuracy, Date_StringValue));
             StartCoroutine(UpdateLetterSpeedTypedData(item.getName, item.GetSpeed, Date_StringValue));
             
+        }
+    }
+    private IEnumerator UpdateUsernameDatabase(string _username, string _Date)
+    {
+        //Set the currently logged in user username in the database
+        var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(_Date).Child("Username").SetValueAsync(_username);
+
+        yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+
+        if (DBTask.Exception != null)
+        {
+            Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+        }
+        else
+        {
+            //Database username is now updated
         }
     }
     private IEnumerator UpdateWpm(int _Wpm, string _Date)
@@ -227,7 +235,7 @@ public class UpLoadData : MonoBehaviour
     private IEnumerator UpdateLetterSpeedTypedData(string letter, float Speed, string _Date)
     {
         //Set the currently logged in user Time
-        var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(_Date).Child("Letter").Child(letter).Child("Speed").SetValueAsync(Speed);
+        var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(_Date).Child("Letters").Child(letter).Child("Speed").SetValueAsync(Speed);
 
         yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 
@@ -238,6 +246,64 @@ public class UpLoadData : MonoBehaviour
         else
         {
             //Time is now updated
+        }
+    }
+    public void HistoryButton()
+    {
+        IsHistoryUIActive = !IsHistoryUIActive;
+        if (IsHistoryUIActive)
+        {
+            StartCoroutine(LoadScoreboardData());
+            HistoryUI.SetActive(true);
+
+        }else
+            HistoryUI.SetActive(false);
+
+    }
+    private IEnumerator LoadScoreboardData()
+    {
+        //Get all the users data ordered by Wpms amount
+        var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").GetValueAsync();
+        //var DBTask = DBreference.Child("users").OrderByChild("kills").GetValueAsync();
+
+        //var DBTask = DBreference.Child("users").Child(User.UserId).GetValueAsync();
+
+
+        yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+
+        if (DBTask.Exception != null)
+        {
+            Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+        }
+        else
+        {
+            //Data has been retrieved
+            DataSnapshot snapshot = DBTask.Result;
+
+            //Destroy any existing scoreboard elements
+            foreach (Transform child in scoreboardContent.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            //Loop through every users UID
+            foreach (DataSnapshot childSnapshot in snapshot.Children.Reverse<DataSnapshot>())
+            {
+                string username = childSnapshot.Child("Username").Value.ToString();
+                int Wpm = int.Parse(childSnapshot.Child("Wpm").Value.ToString());
+                string Time = childSnapshot.Child("Time").Value.ToString();
+                string Date = childSnapshot.Child("Date").Value.ToString();
+                Debug.Log(username);
+                Debug.Log(Wpm);
+                Debug.Log(Time);
+                Debug.Log(Date);
+                //Instantiate new scoreboard elements
+                GameObject scoreboardElement = Instantiate(scoreElement, scoreboardContent);
+                scoreboardElement.GetComponent<ScoreElement>().NewScoreElement(username, Wpm, Time, Date);
+            }
+
+            //Go to scoareboard screen
+            //UIManager.instance.ScoreboardScreen();
         }
     }
 }

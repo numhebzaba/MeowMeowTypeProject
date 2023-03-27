@@ -9,14 +9,14 @@ public class ScoreElement : MonoBehaviour
     public TMP_Text usernameText;
     public TMP_Text WpmText;
     public TMP_Text TimeText;
-    public TMP_Text xpText;
+    public TMP_Text DateText;
 
-    public void NewScoreElement (string _username, int _Wpm, int _Time, int _xp)
+    public void NewScoreElement (string _username, int _Wpm, string _Time, string _Date)
     {
         usernameText.text = _username;
         WpmText.text = _Wpm.ToString();
         TimeText.text = _Time.ToString();
-        xpText.text = _xp.ToString();
+        DateText.text = _Date.ToString();
     }
 
 }
