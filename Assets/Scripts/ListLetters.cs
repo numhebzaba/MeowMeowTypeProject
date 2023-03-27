@@ -46,11 +46,18 @@ public class ListLetters
         get { return Incorrect; }
     }
 
+    public int GetCorrect
+    {
+        get { return Correct; }
+    }
     public float GetAccuracy
     {
         get { return accuracy; }
     }
-
+    public float GetSpeed
+    {
+        get { return Speed; }
+    }
     public void UpdateWrongLetterData()
     {
         this.Incorrect += 1;

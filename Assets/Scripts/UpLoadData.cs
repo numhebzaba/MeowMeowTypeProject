@@ -73,6 +73,7 @@ public class UpLoadData : MonoBehaviour
         Debug.Log(typer.delayTimeSpan.ToString(@"hh\:mm\:ss"));
         StartCoroutine(UpdateDate(typer.wordPerMinute, typer.delayTimeSpan.ToString(@"hh\:mm\:ss")));
 
+
     }
     private IEnumerator UpdateUsernameAuth(string _username)
     {
@@ -111,26 +112,6 @@ public class UpLoadData : MonoBehaviour
     }
     private IEnumerator UpdateDate(int _Wpm, string _Time)
     {
-        //int Date = 0;
-
-        //var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").GetValueAsync();
-
-        //yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
-
-        //if (DBTask.Exception != null)
-        //{
-        //    Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
-        //}
-        //else if (DBTask.Result.Value == null)
-        //{
-        //    Date = 1;
-        //}
-        //else
-        //{
-        //    DataSnapshot snapshot = DBTask.Result;
-        //    Date  = (int)snapshot.Child(typer.aDate.ToString("MM/dd/yyyy")).Value;
-        //}
-
 
         string Date_StringValue = typer.aDate.ToString("dd:MM:yyyy hh:mm tt");
         //Set the currently logged in user Date
@@ -154,7 +135,14 @@ public class UpLoadData : MonoBehaviour
         StartCoroutine(UpdateWpm(_Wpm, Date_StringValue));
         StartCoroutine(UpdateTime(_Time, Date_StringValue));
 
-
+        foreach (var item in typer.DataLetterList)
+        {
+            StartCoroutine(UpdateLetterCorrectTypedData(item.getName, item.GetCorrect, Date_StringValue));
+            StartCoroutine(UpdateLetterInCorrectTypedData(item.getName, item.GetWrongData, Date_StringValue));
+            StartCoroutine(UpdateLetterAccuracyTypedData(item.getName, item.GetAccuracy, Date_StringValue));
+            StartCoroutine(UpdateLetterSpeedTypedData(item.getName, item.GetSpeed, Date_StringValue));
+            
+        }
     }
     private IEnumerator UpdateWpm(int _Wpm, string _Date)
     {
@@ -176,6 +164,70 @@ public class UpLoadData : MonoBehaviour
     {
         //Set the currently logged in user Time
         var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(_Date).Child("Time").SetValueAsync(_Time);
+
+        yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+
+        if (DBTask.Exception != null)
+        {
+            Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+        }
+        else
+        {
+            //Time is now updated
+        }
+    }
+    private IEnumerator UpdateLetterCorrectTypedData( string letter, int Correct, string _Date)
+    {
+        //Set the currently logged in user Time
+        var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(_Date).Child("Letters").Child(letter).Child("Correct").SetValueAsync(Correct);
+
+        yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+
+        if (DBTask.Exception != null)
+        {
+            Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+        }
+        else
+        {
+            //Time is now updated
+        }
+    }
+    private IEnumerator UpdateLetterInCorrectTypedData(string letter, int Incorrect,  string _Date)
+    {
+        //Set the currently logged in user Time
+        var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(_Date).Child("Letters").Child(letter).Child("Incorrect").SetValueAsync(Incorrect);
+
+        yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+
+        if (DBTask.Exception != null)
+        {
+            Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+        }
+        else
+        {
+            //Time is now updated
+        }
+    }
+    private IEnumerator UpdateLetterAccuracyTypedData(string letter, float accuracy, string _Date)
+    {
+        //Set the currently logged in user Time
+        var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(_Date).Child("Letters").Child(letter).Child("Accuracy").SetValueAsync(accuracy);
+
+        yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+
+        if (DBTask.Exception != null)
+        {
+            Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+        }
+        else
+        {
+            //Time is now updated
+        }
+    }
+    private IEnumerator UpdateLetterSpeedTypedData(string letter, float Speed, string _Date)
+    {
+        //Set the currently logged in user Time
+        var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(_Date).Child("Letter").Child(letter).Child("Speed").SetValueAsync(Speed);
 
         yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 
