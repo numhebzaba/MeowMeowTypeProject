@@ -119,10 +119,10 @@ public class CustomWordList : MonoBehaviour
     {
         string newWord = string.Empty;
 
-        if (workingWords.Count != 0)
+        if (TutorialwordList.Count != 0)
         {
-            newWord = workingWords.First();
-            workingWords.Remove(newWord);
+            newWord = TutorialwordList.First();
+            TutorialwordList.Remove(newWord);
         }
         //Debug.Log(newWord);
 
@@ -135,16 +135,16 @@ public class CustomWordList : MonoBehaviour
     {
         string newWord = string.Empty;
 
-        if (workingWords.Count >= 1)
+        if (TutorialwordList.Count >= 1)
         {
-            newWord = workingWords[0 + 1];
+            newWord = TutorialwordList[0 + 1];
         }
         return newWord;
     }
 
     public bool IsWordLeft()
     {
-        if (workingWords.Count == 0)
+        if (TutorialwordList.Count == 0)
         {
             return false;
         }
