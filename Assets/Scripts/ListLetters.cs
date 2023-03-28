@@ -14,6 +14,9 @@ public class ListLetters
     private float Count;
     private float Speed;
 
+    public float AverageAccuracy = 0;
+    public float AverageSpeed = 0;
+
     public ListLetters(string name, float TimeAverage, float NewTime, float Count)
     {
         this.name = name;
@@ -82,6 +85,18 @@ public class ListLetters
         this.Speed = Speed / Correct;
         float _2Diggit = (float)(Math.Truncate((double)Speed * 100.0) / 100.0);
         this.Speed = _2Diggit;
+    }
+    public void GetAverageAccuracyAndSpeed()
+    {
+        this.AverageAccuracy = this.AverageAccuracy/this.Count;
+        this.AverageSpeed = this.AverageSpeed / this.Count;
+
+        float _2DiggitAccuracy = (float)(Math.Truncate((double)AverageAccuracy * 100.0) / 100.0);
+        float _2DiggitSpeed = (float)(Math.Truncate((double)AverageSpeed * 100.0) / 100.0);
+
+        this.AverageAccuracy = _2DiggitAccuracy;
+        this.AverageSpeed = _2DiggitSpeed;
+
     }
 
 }

@@ -403,10 +403,7 @@ public class FirebaseManager : MonoBehaviour
                 int Wpm = int.Parse(childSnapshot.Child("Wpm").Value.ToString());
                 string Time = childSnapshot.Child("Time").Value.ToString();
                 string Date = childSnapshot.Child("Date").Value.ToString();
-                Debug.Log(username);
-                Debug.Log(Wpm);
-                Debug.Log(Time);
-                Debug.Log(Date);
+
                 //Instantiate new scoreboard elements
                 GameObject scoreboardElement = Instantiate(scoreElement, scoreboardContent);
                 scoreboardElement.GetComponent<ScoreElement>().NewScoreElement(username, Wpm, Time, Date);

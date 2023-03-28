@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using Firebase;
@@ -7,7 +8,7 @@ using TMPro;
 using System.Linq;
 using UnityEngine.SceneManagement;
 
-public class UpLoadData : MonoBehaviour
+public class DataManager : MonoBehaviour
 {
     //Firebase variables
     [Header("Firebase")]
@@ -26,6 +27,9 @@ public class UpLoadData : MonoBehaviour
     public GameObject HistoryUI;
     public bool IsHistoryUIActive = false;
 
+    public List<ListLetters> DataLetterList = new List<ListLetters>();
+
+    public ShowKeyboardManager showKeyboardManager;
 
     void Awake()
     {
@@ -133,7 +137,7 @@ public class UpLoadData : MonoBehaviour
             StartCoroutine(UpdateLetterInCorrectTypedData(item.getName, item.GetWrongData, Date_StringValue));
             StartCoroutine(UpdateLetterAccuracyTypedData(item.getName, item.GetAccuracy, Date_StringValue));
             StartCoroutine(UpdateLetterSpeedTypedData(item.getName, item.GetSpeed, Date_StringValue));
-            
+            StartCoroutine(UpdateAverageAccuracyAndSpeed());
         }
     }
     private IEnumerator UpdateUsernameDatabase(string _username, string _Date)
@@ -248,6 +252,114 @@ public class UpLoadData : MonoBehaviour
             //Time is now updated
         }
     }
+    private IEnumerator UpdateAverageAccuracyAndSpeed()
+    {
+        AddEngLetterlist();
+        //Get all the users data ordered by Wpms amount
+        var DBTask1 = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").GetValueAsync();
+
+        yield return new WaitUntil(predicate: () => DBTask1.IsCompleted);
+
+        if (DBTask1.Exception != null)
+        {
+            Debug.LogWarning(message: $"Failed to register task with {DBTask1.Exception}");
+        }
+        else
+        {
+            DataSnapshot snapshot1 = DBTask1.Result;
+            int limitHistoryLoop = 0;
+            foreach (DataSnapshot childSnapshot in snapshot1.Children.Reverse<DataSnapshot>())
+            {
+                if (limitHistoryLoop == 10)
+                    break;
+                limitHistoryLoop++;
+
+                string Date = childSnapshot.Child("Date").Value.ToString();
+                Debug.Log(Date);
+
+                var DBTask2 = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").Child(Date).Child("Letters").GetValueAsync();
+                yield return new WaitUntil(predicate: () => DBTask2.IsCompleted);
+
+
+                if (DBTask2.Exception != null)
+                {
+                    Debug.LogWarning(message: $"Failed to register task with {DBTask2.Exception}");
+                }
+                else
+                {
+                    //Data has been retrieved
+                    DataSnapshot snapshot2 = DBTask2.Result;
+
+                    //Destroy any existing scoreboard elements
+                    foreach (Transform child in scoreboardContent.transform)
+                    {
+                        Destroy(child.gameObject);
+                    }
+
+                    //Loop through every users UID
+
+                    foreach (DataSnapshot childSnapshot2 in snapshot2.Children.Reverse<DataSnapshot>())
+                    {
+                        float acc = float.Parse(childSnapshot2.Child("Accuracy").Value.ToString());
+                        float speed = float.Parse(childSnapshot2.Child("Speed").Value.ToString());
+                        Debug.Log("Date " + Date + " " + childSnapshot2.Key + " acc : " + acc);
+                        Debug.Log("Date " + Date + " " + childSnapshot2.Key + " speed : " + speed);
+
+                        foreach (var item in DataLetterList)
+                        {
+                            if (childSnapshot2.Key == item.getName)
+                            {
+                                item.AverageAccuracy += acc;
+                                item.AverageSpeed += speed;
+                                item.UpdateData();
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (var item in DataLetterList)
+            {
+                item.GetAverageAccuracyAndSpeed();
+                StartCoroutine(UpdateAverageAccuracy(item.getName, item.AverageAccuracy));
+                StartCoroutine(UpdateAverageSpeed(item.getName, item.AverageSpeed));
+
+                Debug.Log(item.getName + " Accuracy : " + item.AverageAccuracy);
+                Debug.Log(item.getName + " Speed : " + item.AverageSpeed);
+            }
+        }
+    }
+    private IEnumerator UpdateAverageAccuracy(string letter, float _AverageAccuracy)
+    {
+        //Set the currently logged in user Wpm
+        var DBTask = DBreference.Child("users").Child(User.UserId).Child("TrackingProgress").Child("Letters").Child(letter).Child("AverageAccuracy").SetValueAsync(_AverageAccuracy);
+
+        yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+
+        if (DBTask.Exception != null)
+        {
+            Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+        }
+        else
+        {
+            //Wpms are now updated
+        }
+    }
+    private IEnumerator UpdateAverageSpeed(string letter, float _AverageSpeed)
+    {
+        //Set the currently logged in user Wpm
+        var DBTask = DBreference.Child("users").Child(User.UserId).Child("TrackingProgress").Child("Letters").Child(letter).Child("AverageSpeed").SetValueAsync(_AverageSpeed);
+
+        yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+
+        if (DBTask.Exception != null)
+        {
+            Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+        }
+        else
+        {
+            //Wpms are now updated
+        }
+    }
     public void HistoryButton()
     {
         IsHistoryUIActive = !IsHistoryUIActive;
@@ -264,9 +376,7 @@ public class UpLoadData : MonoBehaviour
     {
         //Get all the users data ordered by Wpms amount
         var DBTask = DBreference.Child("users").Child(User.UserId).Child("HistoryPlay").GetValueAsync();
-        //var DBTask = DBreference.Child("users").OrderByChild("kills").GetValueAsync();
 
-        //var DBTask = DBreference.Child("users").Child(User.UserId).GetValueAsync();
 
 
         yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
@@ -302,8 +412,87 @@ public class UpLoadData : MonoBehaviour
                 scoreboardElement.GetComponent<ScoreElement>().NewScoreElement(username, Wpm, Time, Date);
             }
 
-            //Go to scoareboard screen
-            //UIManager.instance.ScoreboardScreen();
         }
+    }
+
+
+    public void LoadAccAndSpeedButton()
+    {
+        StartCoroutine(UpdateAverageAccuracyAndSpeed());
+    }
+    private IEnumerator LoadTrackingProgressData()
+    {
+        //Get all the users data ordered by Wpms amount
+        var DBTask = DBreference.Child("users").Child(User.UserId).Child("TrackingProgress").Child("Letters").GetValueAsync();
+
+        yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+
+        if (DBTask.Exception != null)
+        {
+            Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+        }
+        else
+        {
+            //Data has been retrieved
+            DataSnapshot snapshot = DBTask.Result;
+
+            //Destroy any existing scoreboard elements
+            foreach (Transform child in scoreboardContent.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            //Loop through every users UID
+            foreach (DataSnapshot childSnapshot in snapshot.Children.Reverse<DataSnapshot>())
+            {
+                float AverageAccuracy = float.Parse(childSnapshot.Child("AverageAccuracy").Value.ToString());
+                float AverageSpeed = float.Parse(childSnapshot.Child("AverageSpeed").Value.ToString());
+
+                foreach(var switches in showKeyboardManager.SwitchesList)
+                {
+                    if(switches.nameSwitch == childSnapshot.Key)
+                    {
+                        switches.AverageAccuracy = AverageAccuracy;
+                        switches.AverageSpeed = AverageSpeed;
+                    }
+                }
+                
+                Debug.Log(childSnapshot.Key);
+                Debug.Log(AverageAccuracy);
+                Debug.Log(AverageSpeed);
+
+
+            }
+
+        }
+    }
+    private void AddEngLetterlist()
+    {
+        DataLetterList.Add(new ListLetters("a", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("b", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("c", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("d", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("e", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("f", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("g", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("h", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("i", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("j", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("k", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("l", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("m", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("n", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("o", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("p", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("q", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("r", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("s", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("t", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("u", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("v", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("w", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("x", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("y", 0, 0, 0));
+        DataLetterList.Add(new ListLetters("z", 0, 0, 0));
     }
 }
