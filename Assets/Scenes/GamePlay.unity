@@ -6337,6 +6337,11 @@ MonoBehaviour:
   dependencyStatus: 0
   userData: {fileID: 1066490142}
   typer: {fileID: 760846384}
+  scoreboardContent: {fileID: 0}
+  scoreElement: {fileID: 0}
+  HistoryUI: {fileID: 0}
+  IsHistoryUIActive: 0
+  showKeyboardManager: {fileID: 0}
 --- !u!1 &1503758989
 GameObject:
   m_ObjectHideFlags: 0
