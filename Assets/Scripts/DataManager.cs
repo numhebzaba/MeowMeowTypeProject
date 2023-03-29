@@ -137,8 +137,9 @@ public class DataManager : MonoBehaviour
             StartCoroutine(UpdateLetterInCorrectTypedData(item.getName, item.GetWrongData, Date_StringValue));
             StartCoroutine(UpdateLetterAccuracyTypedData(item.getName, item.GetAccuracy, Date_StringValue));
             StartCoroutine(UpdateLetterSpeedTypedData(item.getName, item.GetSpeed, Date_StringValue));
-            StartCoroutine(UpdateAverageAccuracyAndSpeed());
         }
+        StartCoroutine(UpdateAverageAccuracyAndSpeed());
+
     }
     private IEnumerator UpdateUsernameDatabase(string _username, string _Date)
     {
@@ -290,11 +291,6 @@ public class DataManager : MonoBehaviour
                     //Data has been retrieved
                     DataSnapshot snapshot2 = DBTask2.Result;
 
-                    //Destroy any existing scoreboard elements
-                    foreach (Transform child in scoreboardContent.transform)
-                    {
-                        Destroy(child.gameObject);
-                    }
 
                     //Loop through every users UID
 
@@ -418,7 +414,8 @@ public class DataManager : MonoBehaviour
 
     public void LoadAccAndSpeedButton()
     {
-        StartCoroutine(UpdateAverageAccuracyAndSpeed());
+        //StartCoroutine(UpdateAverageAccuracyAndSpeed());
+        StartCoroutine(LoadTrackingProgressData());
     }
     private IEnumerator LoadTrackingProgressData()
     {
@@ -465,6 +462,7 @@ public class DataManager : MonoBehaviour
             }
 
         }
+        showKeyboardManager.ShowAverageAccuracyButton();
     }
     private void AddEngLetterlist()
     {
