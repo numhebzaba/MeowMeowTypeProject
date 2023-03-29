@@ -8,6 +8,7 @@ public class CustomTyper : MonoBehaviour
 {
     public CustomWordList TutorialwordList = null;
     public TMP_Text wordOutput = null;
+    public TMP_Text wordOutputIsTrue = null;
     public TMP_Text nextWordOutput = null;
     public TMP_Text wordTotalUI = null;
     public TMP_Text TimeSpent = null;
@@ -22,6 +23,7 @@ public class CustomTyper : MonoBehaviour
     bool IsGameFinish = false;
 
 
+
     public float accuracy = 0;
     public int wordTotal = 0;
     public int allTypedEntries = 0;
@@ -33,6 +35,7 @@ public class CustomTyper : MonoBehaviour
     private string remainWord = string.Empty;
     private string currentWord = string.Empty;
     private string nextWord = string.Empty;
+    private string remainWordIsTrue = string.Empty;
     public List<ListLetters> DataLetterList = new List<ListLetters>();
 
     public animationStateControllerByType animationStateController;
@@ -204,9 +207,33 @@ public class CustomTyper : MonoBehaviour
     }
     private void RemoveLetter()
     {
+        //Color color = Color.gray;
+
+        // Add the character with the new color to the modified text
+        //modifiedText += "<color=#" + ColorUtility.ToHtmlStringRGB(color) + ">" + textString[0] + "</color>";
+
+        //wordOutput.text = modifiedText;
+
         string newString = remainWord.Remove(0, 1);
+        wordOutputIsTrue.text += remainWord[0];
+
+        if(wordOutputIsTrue.text.Length > 25)
+        {
+            DeleteWordIstrue();
+        }
         SetRemainWord(newString);
     }
+
+    private void DeleteWordIstrue()
+    {
+        remainWordIsTrue = wordOutputIsTrue.text;
+        string newStrings = remainWordIsTrue.Remove(0, 1);
+        wordOutputIsTrue.text += remainWordIsTrue[0];
+
+        nextWord = newStrings;
+        wordOutputIsTrue.text = nextWord;
+    }
+
     private bool IsWordComplete()
     {
         return remainWord.Length == 0;

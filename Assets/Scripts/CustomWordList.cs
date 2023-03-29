@@ -18,11 +18,11 @@ public class CustomWordList : MonoBehaviour
     private List<string> workingWords = new List<string>();
     private List<string> TutorialwordList = new List<string>()
     {
-        "ffff","ffff","ffff","jjjj","jjjj","jjjj","dddd","dddd","dddd","kkkk","kkkk","kkkk",
-        "ssss", "ssss", "ssss","llll","llll","llll","aaaa","aaaa","aaaa",";;;;",";;;;"
-        //,"Trot","Charge","Young","Synonymous","Eminent","Stereotyped","Lunch","Daily","Wilderness"
-        //,"Yard","Dance","Deep","Allow","Lace","Colossal","Boiling","Porter","Like","Fire","Tough"
-        //,"Dull","Kick","Stitch","Press","Houses","Look","Overt","Little","Step","Invite"
+        //"ffff","ffff","ffff","jjjj","jjjj","jjjj","dddd","dddd","dddd","kkkk","kkkk","kkkk",
+        //"ssss", "ssss", "ssss","llll","llll","llll","aaaa","aaaa","aaaa",";;;;",";;;;"
+        "Trot","Charge","Young","Synonymous","Eminent","Stereotyped","Lunch","Daily","Wilderness"
+        ,"Yard","Dance","Deep","Allow","Lace","Colossal","Boiling","Porter","Like","Fire","Tough"
+        ,"Dull","Kick","Stitch","Press","Houses","Look","Overt","Little","Step","Invite"
         //,"Courageous","Murky","Invent","Clover","Arrive","Colossal","Whistle","Guard","Troubled","Easy"
         //,"Momentous","Sneeze","Serious","Abashed","Heavy","General","Cent","Slip","Opposite"
         //,"Loose","Harbor","Rhetorical","Gabby","Stomach","Mountainous","Cool","Elderly","Treatment","Plant","Pickle"
@@ -118,14 +118,22 @@ public class CustomWordList : MonoBehaviour
     public string getWord()
     {
         string newWord = string.Empty;
+        string nextWord = string.Empty;
 
-        if (TutorialwordList.Count != 0)
-        {
-            newWord = TutorialwordList.First();
-            TutorialwordList.Remove(newWord);
-        }
+
+        //if (TutorialwordList.Count != 0)
+        //{
+        //    newWord = TutorialwordList.First();
+        //    TutorialwordList.Remove(newWord);
+        //}
         //Debug.Log(newWord);
 
+
+        for(int i = 0; i < TutorialwordList.Count; i++)
+        {
+            nextWord = TutorialwordList[i];
+            newWord += nextWord+" ";
+        }
 
 
         return newWord;
