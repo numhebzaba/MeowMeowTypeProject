@@ -11,10 +11,23 @@ public class ShowKeyboardManager : MonoBehaviour
     [SerializeField] public List<SwitchKeyboardClass> SwitchesList = new List<SwitchKeyboardClass>();
     public Material[] materials;
 
+    public UIGameManager _UIGameManager;
     public void ShowAverageAccuracyButton()
     {
         IsShowKeyboard = !IsShowKeyboard;
         MainCamera.enabled = !IsShowKeyboard;
+        if (IsShowKeyboard)
+        {
+            _UIGameManager.ClearScreen();
+            _UIGameManager.showUI(2);// show tracking screen
+        }
+        else
+        {
+            _UIGameManager.ClearScreen();
+            _UIGameManager.showUI(0);// show Main screen
+            return;
+        }
+
         foreach(var Switches in SwitchesList)
         {
             if(Switches.AverageAccuracy <=100 && Switches.AverageAccuracy > 75)
