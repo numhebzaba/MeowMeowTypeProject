@@ -457,7 +457,7 @@ public class DataManager : MonoBehaviour
 
 
             }
-            showKeyboardManager.ShowAverageAccuracyButton();
+            showKeyboardManager.ShowKeyboard();
         }
         
     }
